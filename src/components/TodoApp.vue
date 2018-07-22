@@ -12,7 +12,13 @@
         >
       </header>
       <!-- This section should be hidden by default and shown when there are todos -->
-      <Container v-bind:todoList="todoList" v-on:toggleCheck="toggleCheck" v-on:destroyTodo="destroyTodo" v-on:toggleAll="toggleAll"></Container>
+      <Container
+        v-bind:todoList="todoList"
+        v-on:toggleCheck="toggleCheck"
+        v-on:destroyTodo="destroyTodo"
+        v-on:toggleAll="toggleAll"
+        v-on:clearCompleted="clearCompleted"
+      />
     </section>
     <footer class="info">
       <p>Double-click to edit a todo</p>
@@ -79,6 +85,10 @@ export default {
           todo.checked = false
         })
       }
+    },
+    clearCompleted: function() {
+      const uncheckedList = this.todoList.filter(todo => !todo.checked);
+      this.todoList = uncheckedList
     }
   }
 }

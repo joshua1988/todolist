@@ -19,7 +19,7 @@
         </li>
       </ul>
       <!-- Hidden if no completed items are left ↓ -->
-      <button class="clear-completed">Clear completed</button>
+      <button class="clear-completed" v-on:click="clearCompleted">Clear completed</button>
     </footer>
   </div>
 </template>
@@ -44,6 +44,9 @@ export default {
     },
     toggleAll: function() {
       this.$emit('toggleAll')
+    },
+    clearCompleted: function() {
+      this.$emit('clearCompleted')
     }
   },
   computed: {
