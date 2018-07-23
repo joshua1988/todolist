@@ -1,6 +1,12 @@
 <template>
   <div>
-    <todo-list v-bind:todoList="todoList" v-on:toggleCheck="toggleCheck" v-on:destroyTodo="destroyTodo" v-on:toggleAll="toggleAll"></todo-list>
+    <todo-list
+      v-bind:todoList="todoList"
+      v-bind:filteredTodoList="filteredTodoList"
+      v-on:toggleCheck="toggleCheck"
+      v-on:destroyTodo="destroyTodo"
+      v-on:toggleAll="toggleAll"
+    />
     <!-- This footer should hidden by default and shown when there are todos -->
     <footer class="footer">
       <!-- This should be `0 items left` by default -->
@@ -12,7 +18,7 @@
           <a class="selected" href="#/">All</a>
         </li>
         <li>
-          <a href="#/active">Active</a>
+          <a href="#/active" v-on:click="filterActive">Active</a>
         </li>
         <li>
           <a href="#/completed">Completed</a>
@@ -33,7 +39,9 @@ export default {
     'todo-list': TodoList
   },
   props: {
-    todoList: Array
+    todoList: Array,
+    filteredTodoList: Array,
+    filterStatus: String
   },
   methods: {
     toggleCheck: function(todo) {
@@ -47,6 +55,9 @@ export default {
     },
     clearCompleted: function() {
       this.$emit('clearCompleted')
+    },
+    filterActive: function() {
+      this.$emit('filterActive')
     }
   },
   computed: {

@@ -2,7 +2,7 @@
   <section class="main">
     <input id="toggle-all" class="toggle-all" type="checkbox" v-on:click="toggleAll">
     <label for="toggle-all">Mark all as complete</label>
-    <ul class="todo-list" v-for="(todo, index) in todoList" :key="index">
+    <ul class="todo-list" v-for="(todo, index) in filteredTodoList" :key="index">
       <!-- These are here just to show the structure of the list items -->
       <!-- List items should get the class `editing` when editing and `completed` when marked as completed -->
       <li v-bind:class="{completed : todo.checked}">
@@ -21,7 +21,7 @@
 export default {
   name: 'TodoList',
   props: {
-    todoList: Array
+    filteredTodoList: Array
   },
   methods: {
     toggleCheck: function(todo) {

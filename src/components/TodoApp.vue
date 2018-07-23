@@ -14,10 +14,13 @@
       <!-- This section should be hidden by default and shown when there are todos -->
       <Container
         v-bind:todoList="todoList"
+        v-bind:filteredTodoList="filteredTodoList"
+        v-bind:filterStatus="filterStatus"
         v-on:toggleCheck="toggleCheck"
         v-on:destroyTodo="destroyTodo"
         v-on:toggleAll="toggleAll"
         v-on:clearCompleted="clearCompleted"
+        v-on:filterActive="filterActive"
       />
     </section>
     <footer class="info">
@@ -52,7 +55,9 @@ export default {
       }, {
         title: 'Test an application',
         checked: false 
-      }]
+      }],
+      filterStatus: 'All',
+      filteredTodoList: []
     }
   },
   methods: {
@@ -63,14 +68,23 @@ export default {
       this.todoList.push({
         title: this.todoInput,
         checked: false
-      })
+      });
+      this.filteredTodoList.push({
+        title: this.todoInput,
+        checked: false
+      });
       this.todoInput = ''
     },
     toggleCheck: function(todo) {
       todo.checked = !todo.checked
+      const uncheckedList = this.todoList.filter(todo => !todo.checked);
+      if (this.filterStatus == 'Active') {
+        this.filteredTodoList = uncheckedList
+      }
     },
     destroyTodo: function(index) {
-      this.todoList.pop(index)
+      this.todoList.pop(index);
+      this.filteredTodoList.pop(index);
     },
     toggleAll: function() {
       const checkedList = this.todoList.filter(todo => todo.checked);
@@ -89,8 +103,15 @@ export default {
     clearCompleted: function() {
       const uncheckedList = this.todoList.filter(todo => !todo.checked);
       this.todoList = uncheckedList
+    },
+    filterActive: function() {
+      const uncheckedList = this.todoList.filter(todo => !todo.checked);
+      this.filterStatus = 'Active'
+      this.filteredTodoList = uncheckedList
     }
-  }
+  }, created() {
+    this.filteredTodoList = this.todoList
+  },
 }
 </script>
 
