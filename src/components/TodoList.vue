@@ -21,7 +21,8 @@
 export default {
   name: 'TodoList',
   props: {
-    filteredTodoList: Array
+    filteredTodoList: Array,
+    leftItems: Number
   },
   methods: {
     toggleCheck: function(todo) {

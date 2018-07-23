@@ -2,6 +2,7 @@
   <div>
     <todo-list
       v-bind:filteredTodoList="filteredTodoList"
+      v-bind:leftItems="leftItems"
       v-on:toggleCheck="toggleCheck"
       v-on:destroyTodo="destroyTodo"
       v-on:toggleAll="toggleAll"
