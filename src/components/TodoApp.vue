@@ -13,14 +13,14 @@
       </header>
       <!-- This section should be hidden by default and shown when there are todos -->
       <Container
-        v-bind:todoList="todoList"
         v-bind:filteredTodoList="filteredTodoList"
         v-bind:filterStatus="filterStatus"
+        v-bind:leftItems="leftItems"
         v-on:toggleCheck="toggleCheck"
         v-on:destroyTodo="destroyTodo"
         v-on:toggleAll="toggleAll"
         v-on:clearCompleted="clearCompleted"
-        v-on:filterActive="filterActive"
+        v-on:adjustFilter="adjustFilter"
       />
     </section>
     <footer class="info">
@@ -42,6 +42,7 @@
 
 <script>
 import Container from './Container.vue'
+import { Filter } from "../constants/filter";
 
 export default {
   name: 'TodoApp',
@@ -56,8 +57,7 @@ export default {
         title: 'Test an application',
         checked: false 
       }],
-      filterStatus: 'All',
-      filteredTodoList: []
+      filterStatus: Filter.ALL,
     }
   },
   methods: {
@@ -69,22 +69,13 @@ export default {
         title: this.todoInput,
         checked: false
       });
-      this.filteredTodoList.push({
-        title: this.todoInput,
-        checked: false
-      });
       this.todoInput = ''
     },
     toggleCheck: function(todo) {
       todo.checked = !todo.checked
-      const uncheckedList = this.todoList.filter(todo => !todo.checked);
-      if (this.filterStatus == 'Active') {
-        this.filteredTodoList = uncheckedList
-      }
     },
     destroyTodo: function(index) {
       this.todoList.pop(index);
-      this.filteredTodoList.pop(index);
     },
     toggleAll: function() {
       const checkedList = this.todoList.filter(todo => todo.checked);
@@ -104,14 +95,28 @@ export default {
       const uncheckedList = this.todoList.filter(todo => !todo.checked);
       this.todoList = uncheckedList
     },
-    filterActive: function() {
-      const uncheckedList = this.todoList.filter(todo => !todo.checked);
-      this.filterStatus = 'Active'
-      this.filteredTodoList = uncheckedList
+    adjustFilter: function(filter) {
+      this.filterStatus = filter
     }
-  }, created() {
-    this.filteredTodoList = this.todoList
   },
+  computed: {
+    leftItems: function() {
+      return this.todoList.filter(todo => !todo.checked).length
+    },
+    filteredTodoList: function() {
+      switch (this.filterStatus) {
+        case Filter.ALL:
+          return this.todoList;
+        case Filter.ACTIVE:
+          return this.todoList.filter(todo => !todo.checked);
+        case Filter.COMPLETED:
+          return this.todoList.filter(todo => todo.checked);
+        default:
+          return this.todoList
+      }
+    }
+  }
+
 }
 </script>
 
