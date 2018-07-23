@@ -1,7 +1,6 @@
 <template>
   <div>
     <todo-list
-      v-bind:todoList="todoList"
       v-bind:filteredTodoList="filteredTodoList"
       v-on:toggleCheck="toggleCheck"
       v-on:destroyTodo="destroyTodo"
@@ -15,13 +14,13 @@
       <!-- Remove this if you don't implement routing -->
       <ul class="filters">
         <li>
-          <a class="selected" href="#/">All</a>
+          <a v-bind:class="{selected : filterStatus == Filter.ALL}" href="#/" v-on:click="adjustFilter(Filter.ALL)">All</a>
         </li>
         <li>
-          <a href="#/active" v-on:click="filterActive">Active</a>
+          <a v-bind:class="{selected : filterStatus == Filter.ACTIVE}" href="#/active" v-on:click="adjustFilter(Filter.ACTIVE)">Active</a>
         </li>
         <li>
-          <a href="#/completed">Completed</a>
+          <a v-bind:class="{selected : filterStatus == Filter.COMPLETED}" href="#/completed" v-on:click="adjustFilter(Filter.COMPLETED)">Completed</a>
         </li>
       </ul>
       <!-- Hidden if no completed items are left ↓ -->
@@ -32,16 +31,22 @@
 
 <script>
 import TodoList from './TodoList.vue'
+import { Filter } from '../constants/filter'
 
 export default {
   name: 'Container',
+  data() {
+    return {
+      Filter: Filter
+    }
+  },
   components: {
     'todo-list': TodoList
   },
   props: {
-    todoList: Array,
     filteredTodoList: Array,
-    filterStatus: String
+    filterStatus: String,
+    leftItems: Number
   },
   methods: {
     toggleCheck: function(todo) {
@@ -56,13 +61,8 @@ export default {
     clearCompleted: function() {
       this.$emit('clearCompleted')
     },
-    filterActive: function() {
-      this.$emit('filterActive')
-    }
-  },
-  computed: {
-    leftItems: function() {
-      return this.todoList.filter(todo => !todo.checked).length
+    adjustFilter: function(filter) {
+      this.$emit('adjustFilter', filter)
     }
   }
 }
