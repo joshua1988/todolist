@@ -60,6 +60,15 @@ export default {
       filterStatus: Filter.ALL,
     }
   },
+  mounted() {
+    if (localStorage.getItem('todoList')) {
+      try {
+        this.todoList = JSON.parse(localStorage.getItem('todoList'));
+      } catch(e) {
+        localStorage.removeItem('todoList');
+      }
+    }
+  },
   methods: {
     addTodo: function addTodo () {
       if(this.todoInput == ''){
@@ -70,12 +79,15 @@ export default {
         checked: false
       });
       this.todoInput = ''
+      this.saveTodoList()
     },
     toggleCheck: function(todo) {
       todo.checked = !todo.checked
+      this.saveTodoList()
     },
     destroyTodo: function(index) {
       this.todoList.pop(index);
+      this.saveTodoList()
     },
     toggleAll: function() {
       const checkedList = this.todoList.filter(todo => todo.checked);
@@ -90,13 +102,19 @@ export default {
           todo.checked = false
         })
       }
+      this.saveTodoList()
     },
     clearCompleted: function() {
       const uncheckedList = this.todoList.filter(todo => !todo.checked);
       this.todoList = uncheckedList
+      this.saveTodoList()
     },
     adjustFilter: function(filter) {
       this.filterStatus = filter
+    },
+    saveTodoList() {
+      let parsed = JSON.stringify(this.todoList);
+      localStorage.setItem('todoList', parsed);
     }
   },
   computed: {
