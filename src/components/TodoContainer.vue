@@ -1,11 +1,7 @@
 <template>
   <div>
-    <todo-list
+    <TodoList
       v-bind:filteredTodoList="filteredTodoList"
-      v-bind:leftItems="leftItems"
-      v-on:toggleCheck="toggleCheck"
-      v-on:destroyTodo="destroyTodo"
-      v-on:toggleAll="toggleAll"
     />
     <!-- This footer should hidden by default and shown when there are todos -->
     <footer class="footer">
@@ -15,13 +11,13 @@
       <!-- Remove this if you don't implement routing -->
       <ul class="filters">
         <li>
-          <a v-bind:class="{selected : filterStatus == Filter.ALL}" href="#/" v-on:click="adjustFilter(Filter.ALL)">All</a>
+          <a v-bind:class="{selected : filterStatus === Filter.ALL}" href="#/" v-on:click="adjustFilter(Filter.ALL)">All</a>
         </li>
         <li>
-          <a v-bind:class="{selected : filterStatus == Filter.ACTIVE}" href="#/active" v-on:click="adjustFilter(Filter.ACTIVE)">Active</a>
+          <a v-bind:class="{selected : filterStatus === Filter.ACTIVE}" href="#/active" v-on:click="adjustFilter(Filter.ACTIVE)">Active</a>
         </li>
         <li>
-          <a v-bind:class="{selected : filterStatus == Filter.COMPLETED}" href="#/completed" v-on:click="adjustFilter(Filter.COMPLETED)">Completed</a>
+          <a v-bind:class="{selected : filterStatus === Filter.COMPLETED}" href="#/completed" v-on:click="adjustFilter(Filter.COMPLETED)">Completed</a>
         </li>
       </ul>
       <!-- Hidden if no completed items are left ↓ -->
@@ -35,14 +31,14 @@ import TodoList from './TodoList.vue'
 import { Filter } from '../constants/filter'
 
 export default {
-  name: 'Container',
+  name: 'TodoContainer',
   data() {
     return {
-      Filter: Filter
+      Filter
     }
   },
   components: {
-    'todo-list': TodoList
+    TodoList
   },
   props: {
     filteredTodoList: Array,
@@ -50,19 +46,10 @@ export default {
     leftItems: Number
   },
   methods: {
-    toggleCheck: function(todo) {
-      this.$emit('toggleCheck', todo)
-    },
-    destroyTodo: function(index) {
-      this.$emit('destroyTodo', index)
-    },
-    toggleAll: function() {
-      this.$emit('toggleAll')
-    },
-    clearCompleted: function() {
+    clearCompleted() {
       this.$emit('clearCompleted')
     },
-    adjustFilter: function(filter) {
+    adjustFilter(filter) {
       this.$emit('adjustFilter', filter)
     }
   }
